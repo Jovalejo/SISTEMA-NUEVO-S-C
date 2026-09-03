@@ -43,21 +43,21 @@ export default function ReportesPage() {
   }
   
   const aplicarFiltros = (data: any[]) => {
-    let filtrados = [...data]
+    let result = [...data]
     
     if (filtroFechaInicio) {
-      filtradas = filtradas.filter((d: any) => new Date(d.fecha) >= new Date(filtroFechaInicio))
+      result = result.filter((d: any) => new Date(d.fecha) >= new Date(filtroFechaInicio))
     }
     
     if (filtroFechaFin) {
-      filtradas = filtradas.filter((d: any) => new Date(d.fecha) <= new Date(filtroFechaFin))
+      result = result.filter((d: any) => new Date(d.fecha) <= new Date(filtroFechaFin))
     }
     
     if (filtroProducto) {
-      filtradas = filtradas.filter((d: any) => d.producto_id === filtroProducto)
+      result = result.filter((d: any) => d.producto_id === filtroProducto)
     }
     
-    return filtradas
+    return result
   }
   
   const limpiarFiltros = () => {
@@ -353,7 +353,7 @@ export default function ReportesPage() {
                     </div>
                     {ventasFiltradas.length > 0 ? (
                       <div className="divide-y divide-gray-100">
-                        {ventasFiltradas.slice(0, 5).map((venta) => (
+                        {ventasFiltradas.slice(0, 5).map((venta: any) => (
                           <div key={venta.id} className="p-4 hover:bg-gray-50">
                             <div className="flex justify-between items-start mb-1">
                               <div className="font-medium text-gray-900 text-sm">
@@ -383,7 +383,7 @@ export default function ReportesPage() {
                     </div>
                     {devolucionesFiltradas.length > 0 ? (
                       <div className="divide-y divide-gray-100">
-                        {devolucionesFiltradas.slice(0, 5).map((devolucion) => (
+                        {devolucionesFiltradas.slice(0, 5).map((devolucion: any) => (
                           <div key={devolucion.id} className="p-4 hover:bg-gray-50">
                             <div className="flex justify-between items-start mb-1">
                               <div className="font-medium text-gray-900 text-sm">
@@ -413,7 +413,7 @@ export default function ReportesPage() {
                     </div>
                     {recargasFiltradas.length > 0 ? (
                       <div className="divide-y divide-gray-100">
-                        {recargasFiltradas.slice(0, 5).map((recarga) => (
+                        {recargasFiltradas.slice(0, 5).map((recarga: any) => (
                           <div key={recarga.id} className="p-4 hover:bg-gray-50">
                             <div className="flex justify-between items-start mb-1">
                               <div className="font-medium text-gray-900 text-sm">
