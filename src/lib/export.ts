@@ -10,12 +10,18 @@ export const exportToPDF = (data: any[], filename: string, title: string) => {
   doc.setFontSize(11)
   doc.text(`Generado: ${new Date().toLocaleDateString()}`, 14, 30)
   
+  if (data.length === 0) {
+    doc.text('No hay datos para exportar', 14, 50)
+    doc.save(`${filename}.pdf`)
+    return
+  }
+  
   const columns = Object.keys(data[0] || {})
   const rows = data.map(item => Object.values(item))
   
   autoTable(doc, {
     head: [columns],
-    body: rows,
+    body: rows as any[][],
     startY: 40,
     styles: { fontSize: 9 },
     headStyles: { fillColor: [30, 58, 138] } // Azul oscuro

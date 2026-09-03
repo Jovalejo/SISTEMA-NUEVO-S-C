@@ -46,15 +46,15 @@ export default function ReportesPage() {
     let filtrados = [...data]
     
     if (filtroFechaInicio) {
-      filtradas = filtradas.filter(d => new Date(d.fecha) >= new Date(filtroFechaInicio))
+      filtradas = filtradas.filter((d: any) => new Date(d.fecha) >= new Date(filtroFechaInicio))
     }
     
     if (filtroFechaFin) {
-      filtradas = filtradas.filter(d => new Date(d.fecha) <= new Date(filtroFechaFin))
+      filtradas = filtradas.filter((d: any) => new Date(d.fecha) <= new Date(filtroFechaFin))
     }
     
     if (filtroProducto) {
-      filtradas = filtradas.filter(d => d.producto_id === filtroProducto)
+      filtradas = filtradas.filter((d: any) => d.producto_id === filtroProducto)
     }
     
     return filtradas
@@ -107,7 +107,7 @@ export default function ReportesPage() {
     totalVentas: ventasFiltradas.length,
     totalDevoluciones: devolucionesFiltradas.length,
     totalRecargas: recargasFiltradas.length,
-    montoVentas: ventasFiltradas.reduce((sum, v) => sum + (v.total || 0), 0)
+    montoVentas: ventasFiltradas.reduce((sum: number, v: any) => sum + (v.total || 0), 0)
   }
   
   if (loading) {
@@ -456,7 +456,7 @@ export default function ReportesPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {ventasFiltradas.map((venta) => (
+                        {ventasFiltradas.map((venta: any) => (
                           <tr key={venta.id}>
                             <td className="text-gray-900">{new Date(venta.fecha).toLocaleDateString()}</td>
                             <td className="font-medium text-gray-900">{venta.productos?.nombre || 'N/A'}</td>
@@ -493,7 +493,7 @@ export default function ReportesPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {devolucionesFiltradas.map((devolucion) => (
+                        {devolucionesFiltradas.map((devolucion: any) => (
                           <tr key={devolucion.id}>
                             <td className="text-gray-900">{new Date(devolucion.fecha).toLocaleDateString()}</td>
                             <td className="font-medium text-gray-900">{devolucion.productos?.nombre || 'N/A'}</td>
@@ -528,7 +528,7 @@ export default function ReportesPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {recargasFiltradas.map((recarga) => (
+                        {recargasFiltradas.map((recarga: any) => (
                           <tr key={recarga.id}>
                             <td className="text-gray-900">{new Date(recarga.fecha).toLocaleDateString()}</td>
                             <td className="font-medium text-gray-900">{recarga.productos?.nombre || 'N/A'}</td>
