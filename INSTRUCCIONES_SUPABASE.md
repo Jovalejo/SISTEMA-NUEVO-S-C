@@ -1,12 +1,19 @@
 # Configuración de Supabase
 
-## 1. Crear cuenta en Supabase
-1. Ve a https://supabase.com y crea una cuenta gratuita
-2. Crea un nuevo proyecto llamado "inventario-san-cristobal"
+## 🚀 INSTRUCCIONES RÁPIDAS
 
-## 2. Crear las tablas en la base de datos
+Para configurar Supabase rápidamente, sigue la guía completa en:
+**GUIA_DESPLIEGUE_COMPLETO.md** - Paso 2: Supabase
 
-En el SQL Editor de Supabase, ejecuta el siguiente script:
+## 📋 Resumen del Proceso
+
+### 1. Crear Proyecto en Supabase
+1. Ve a https://supabase.com
+2. Crea cuenta gratuita
+3. Crea nuevo proyecto: `inventario-san-cristobal`
+
+### 2. Crear Tablas (SQL Script)
+En el SQL Editor de Supabase, ejecuta este script:
 
 ```sql
 -- Tabla de productos
@@ -80,61 +87,43 @@ BEGIN
     WHERE id = p_producto_id;
 END;
 $$ LANGUAGE plpgsql;
-```
 
-## 3. Configurar Row Level Security (RLS)
-
-En el SQL Editor de Supabase, ejecuta:
-
-```sql
--- Habilitar RLS
+-- Habilitar RLS y crear políticas
 ALTER TABLE productos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ventas ENABLE ROW LEVEL SECURITY;
 ALTER TABLE devoluciones ENABLE ROW LEVEL SECURITY;
 ALTER TABLE recargas ENABLE ROW LEVEL SECURITY;
 
--- Crear políticas para permitir acceso público (para desarrollo)
--- NOTA: Para producción, usa autenticación proper
-
 CREATE POLICY "Permitir acceso público a productos" ON productos
-    FOR ALL USING (true)
-    WITH CHECK (true);
+    FOR ALL USING (true) WITH CHECK (true);
 
 CREATE POLICY "Permitir acceso público a ventas" ON ventas
-    FOR ALL USING (true)
-    WITH CHECK (true);
+    FOR ALL USING (true) WITH CHECK (true);
 
 CREATE POLICY "Permitir acceso público a devoluciones" ON devoluciones
-    FOR ALL USING (true)
-    WITH CHECK (true);
+    FOR ALL USING (true) WITH CHECK (true);
 
 CREATE POLICY "Permitir acceso público a recargas" ON recargas
-    FOR ALL USING (true)
-    WITH CHECK (true);
+    FOR ALL USING (true) WITH CHECK (true);
 ```
 
-## 4. Obtener las credenciales
-
-1. En tu proyecto de Supabase, ve a Settings > API
+### 3. Obtener Credenciales
+1. En tu proyecto de Supabase: Settings → API
 2. Copia:
-   - Project URL
-   - anon public key
+   - **Project URL**
+   - **anon public key**
 
-## 5. Configurar el archivo .env.local
-
-Crea un archivo `.env.local` en la raíz del proyecto con:
+### 4. Configurar Variables de Entorno
+Crea `.env.local` en la raíz del proyecto:
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=tu_project_url_aqui
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key_aqui
+NEXT_PUBLIC_SUPABASE_URL=tu_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
 ```
 
-Reemplaza los valores con los que copiaste de Supabase.
+## ⚠️ NOTA IMPORTANTE
 
-## 6. Ejecutar el proyecto
+Para el despliegue en Vercel, configura las variables de entorno en:
+Vercel → Settings → Environment Variables
 
-```bash
-npm run dev
-```
-
-El sistema estará disponible en http://localhost:3000
+No subas el archivo `.env.local` a GitHub (ya está en .gitignore).
