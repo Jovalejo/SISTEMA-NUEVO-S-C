@@ -49,46 +49,60 @@ export interface Recarga {
   created_at?: string
 }
 
-// Funciones de almacenamiento local para modo demo
+// Funciones de almacenamiento local para modo demo con soporte multi-tenant
+const getEmpresaPrefix = () => {
+  if (typeof window === 'undefined') return 'sancristobal'
+  const empresa = localStorage.getItem('selectedEmpresa') || 'sancristobal'
+  return empresa
+}
+
 const localStorageHelper = {
   getProducts: (): Producto[] => {
     if (typeof window === 'undefined') return []
-    const data = localStorage.getItem('productos')
+    const prefix = getEmpresaPrefix()
+    const data = localStorage.getItem(`${prefix}_productos`)
     return data ? JSON.parse(data) : []
   },
   setProducts: (products: Producto[]) => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('productos', JSON.stringify(products))
+      const prefix = getEmpresaPrefix()
+      localStorage.setItem(`${prefix}_productos`, JSON.stringify(products))
     }
   },
   getVentas: (): any[] => {
     if (typeof window === 'undefined') return []
-    const data = localStorage.getItem('ventas')
+    const prefix = getEmpresaPrefix()
+    const data = localStorage.getItem(`${prefix}_ventas`)
     return data ? JSON.parse(data) : []
   },
   setVentas: (ventas: any[]) => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('ventas', JSON.stringify(ventas))
+      const prefix = getEmpresaPrefix()
+      localStorage.setItem(`${prefix}_ventas`, JSON.stringify(ventas))
     }
   },
   getDevoluciones: (): any[] => {
     if (typeof window === 'undefined') return []
-    const data = localStorage.getItem('devoluciones')
+    const prefix = getEmpresaPrefix()
+    const data = localStorage.getItem(`${prefix}_devoluciones`)
     return data ? JSON.parse(data) : []
   },
   setDevoluciones: (devoluciones: any[]) => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('devoluciones', JSON.stringify(devoluciones))
+      const prefix = getEmpresaPrefix()
+      localStorage.setItem(`${prefix}_devoluciones`, JSON.stringify(devoluciones))
     }
   },
   getRecargas: (): any[] => {
     if (typeof window === 'undefined') return []
-    const data = localStorage.getItem('recargas')
+    const prefix = getEmpresaPrefix()
+    const data = localStorage.getItem(`${prefix}_recargas`)
     return data ? JSON.parse(data) : []
   },
   setRecargas: (recargas: any[]) => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('recargas', JSON.stringify(recargas))
+      const prefix = getEmpresaPrefix()
+      localStorage.setItem(`${prefix}_recargas`, JSON.stringify(recargas))
     }
   }
 }
