@@ -114,13 +114,13 @@ export default function ProductosPage() {
   }
   
   const handleDelete = async (id: string) => {
-    if (confirm('¿Estás seguro de eliminar este producto?')) {
+    if (confirm('¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer.')) {
       try {
         await productosAPI.delete(id)
         await loadProductos()
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error al eliminar producto:', error)
-        alert('Error al eliminar producto')
+        alert(error.message || 'Error al eliminar producto. Verifica que no tenga ventas o recargas asociadas.')
       }
     }
   }

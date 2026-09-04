@@ -16,6 +16,7 @@ export interface Producto {
   stock: number
   precio: number
   categoria: string
+  empresa_id?: string
   created_at?: string
 }
 
@@ -27,6 +28,7 @@ export interface Venta {
   total: number
   fecha: string
   cliente?: string
+  empresa_id?: string
   created_at?: string
 }
 
@@ -37,6 +39,7 @@ export interface Devolucion {
   cantidad: number
   motivo: string
   fecha: string
+  empresa_id?: string
   created_at?: string
 }
 
@@ -46,6 +49,7 @@ export interface Recarga {
   cantidad: number
   proveedor?: string
   fecha: string
+  empresa_id?: string
   created_at?: string
 }
 
@@ -110,28 +114,31 @@ const localStorageHelper = {
 // Funciones de la API
 export const productosAPI = {
   async getAll() {
+    const empresaId = getEmpresaPrefix()
     if (!supabase) {
       return localStorageHelper.getProducts()
     }
     const { data, error } = await supabase
       .from('productos')
       .select('*')
+      .eq('empresa_id', empresaId)
       .order('nombre')
     if (error) throw error
     return data
   },
 
   async create(producto: Omit<Producto, 'id' | 'created_at'>) {
+    const empresaId = getEmpresaPrefix()
     if (!supabase) {
       const products = localStorageHelper.getProducts()
-      const newProduct = { ...producto, id: Date.now().toString(), created_at: new Date().toISOString() }
+      const newProduct = { ...producto, id: Date.now().toString(), created_at: new Date().toISOString(), empresa_id: empresaId }
       products.push(newProduct)
       localStorageHelper.setProducts(products)
       return newProduct
     }
     const { data, error } = await supabase
       .from('productos')
-      .insert(producto)
+      .insert({ ...producto, empresa_id: empresaId })
       .select()
       .single()
     if (error) throw error
@@ -170,7 +177,10 @@ export const productosAPI = {
       .from('productos')
       .delete()
       .eq('id', id)
-    if (error) throw error
+    if (error) {
+      console.error('Error detallado de Supabase:', error)
+      throw new Error(`No se puede eliminar el producto: ${error.message}. Puede tener ventas o recargas asociadas.`)
+    }
   },
 
   async updateStock(id: string, cantidad: number) {
@@ -197,6 +207,7 @@ export const productosAPI = {
 
 export const ventasAPI = {
   async getAll() {
+    const empresaId = getEmpresaPrefix()
     if (!supabase) {
       const ventas = localStorageHelper.getVentas()
       const products = localStorageHelper.getProducts()
@@ -208,16 +219,18 @@ export const ventasAPI = {
     const { data, error } = await supabase
       .from('ventas')
       .select('*, productos(nombre)')
+      .eq('empresa_id', empresaId)
       .order('fecha', { ascending: false })
     if (error) throw error
     return data
   },
 
   async create(venta: Omit<Venta, 'id' | 'created_at'>) {
+    const empresaId = getEmpresaPrefix()
     if (!supabase) {
       const ventas = localStorageHelper.getVentas()
       const products = localStorageHelper.getProducts()
-      const newVenta = { ...venta, id: Date.now().toString(), created_at: new Date().toISOString() }
+      const newVenta = { ...venta, id: Date.now().toString(), created_at: new Date().toISOString(), empresa_id: empresaId }
       ventas.push(newVenta)
       localStorageHelper.setVentas(ventas)
       
@@ -232,7 +245,7 @@ export const ventasAPI = {
     }
     const { data, error } = await supabase
       .from('ventas')
-      .insert(venta)
+      .insert({ ...venta, empresa_id: empresaId })
       .select()
       .single()
     if (error) throw error
@@ -249,6 +262,7 @@ export const ventasAPI = {
 
 export const devolucionesAPI = {
   async getAll() {
+    const empresaId = getEmpresaPrefix()
     if (!supabase) {
       const devoluciones = localStorageHelper.getDevoluciones()
       const products = localStorageHelper.getProducts()
@@ -260,16 +274,18 @@ export const devolucionesAPI = {
     const { data, error } = await supabase
       .from('devoluciones')
       .select('*, productos(nombre)')
+      .eq('empresa_id', empresaId)
       .order('fecha', { ascending: false })
     if (error) throw error
     return data
   },
 
   async create(devolucion: Omit<Devolucion, 'id' | 'created_at'>) {
+    const empresaId = getEmpresaPrefix()
     if (!supabase) {
       const devoluciones = localStorageHelper.getDevoluciones()
       const products = localStorageHelper.getProducts()
-      const newDevolucion = { ...devolucion, id: Date.now().toString(), created_at: new Date().toISOString() }
+      const newDevolucion = { ...devolucion, id: Date.now().toString(), created_at: new Date().toISOString(), empresa_id: empresaId }
       devoluciones.push(newDevolucion)
       localStorageHelper.setDevoluciones(devoluciones)
       
@@ -284,7 +300,7 @@ export const devolucionesAPI = {
     }
     const { data, error } = await supabase
       .from('devoluciones')
-      .insert(devolucion)
+      .insert({ ...devolucion, empresa_id: empresaId })
       .select()
       .single()
     if (error) throw error
@@ -301,6 +317,7 @@ export const devolucionesAPI = {
 
 export const recargasAPI = {
   async getAll() {
+    const empresaId = getEmpresaPrefix()
     if (!supabase) {
       const recargas = localStorageHelper.getRecargas()
       const products = localStorageHelper.getProducts()
@@ -312,16 +329,18 @@ export const recargasAPI = {
     const { data, error } = await supabase
       .from('recargas')
       .select('*, productos(nombre)')
+      .eq('empresa_id', empresaId)
       .order('fecha', { ascending: false })
     if (error) throw error
     return data
   },
 
   async create(recarga: Omit<Recarga, 'id' | 'created_at'>) {
+    const empresaId = getEmpresaPrefix()
     if (!supabase) {
       const recargas = localStorageHelper.getRecargas()
       const products = localStorageHelper.getProducts()
-      const newRecarga = { ...recarga, id: Date.now().toString(), created_at: new Date().toISOString() }
+      const newRecarga = { ...recarga, id: Date.now().toString(), created_at: new Date().toISOString(), empresa_id: empresaId }
       recargas.push(newRecarga)
       localStorageHelper.setRecargas(recargas)
       
@@ -336,7 +355,7 @@ export const recargasAPI = {
     }
     const { data, error } = await supabase
       .from('recargas')
-      .insert(recarga)
+      .insert({ ...recarga, empresa_id: empresaId })
       .select()
       .single()
     if (error) throw error
