@@ -17,6 +17,7 @@ export interface Producto {
   precio: number
   categoria: string
   empresa_id?: string
+  eliminado_at?: string | null
   created_at?: string
 }
 
@@ -65,7 +66,7 @@ const localStorageHelper = {
     if (typeof window === 'undefined') return []
     const prefix = getEmpresaPrefix()
     const data = localStorage.getItem(`${prefix}_productos`)
-    return data ? JSON.parse(data) : []
+    return data ? JSON.parse(data).filter((p: Producto) => !p.eliminado_at) : []
   },
   setProducts: (products: Producto[]) => {
     if (typeof window !== 'undefined') {
@@ -116,12 +117,13 @@ export const productosAPI = {
   async getAll() {
     const empresaId = getEmpresaPrefix()
     if (!supabase) {
-      return localStorageHelper.getProducts()
+      return localStorageHelper.getProducts().filter(p => !p.eliminado_at)
     }
     const { data, error } = await supabase
       .from('productos')
       .select('*')
       .eq('empresa_id', empresaId)
+      .is('eliminado_at', null)
       .order('nombre')
     if (error) throw error
     return data
@@ -131,14 +133,14 @@ export const productosAPI = {
     const empresaId = getEmpresaPrefix()
     if (!supabase) {
       const products = localStorageHelper.getProducts()
-      const newProduct = { ...producto, id: Date.now().toString(), created_at: new Date().toISOString(), empresa_id: empresaId }
+      const newProduct = { ...producto, id: Date.now().toString(), created_at: new Date().toISOString(), empresa_id: empresaId, eliminado_at: null }
       products.push(newProduct)
       localStorageHelper.setProducts(products)
       return newProduct
     }
     const { data, error } = await supabase
       .from('productos')
-      .insert({ ...producto, empresa_id: empresaId })
+      .insert({ ...producto, empresa_id: empresaId, eliminado_at: null })
       .select()
       .single()
     if (error) throw error
@@ -167,20 +169,23 @@ export const productosAPI = {
   },
 
   async delete(id: string) {
+    const empresaId = getEmpresaPrefix()
     if (!supabase) {
       const products = localStorageHelper.getProducts()
-      const filtered = products.filter(p => p.id !== id)
-      localStorageHelper.setProducts(filtered)
+      const index = products.findIndex(p => p.id === id)
+      if (index !== -1) {
+        products[index].eliminado_at = new Date().toISOString()
+        localStorageHelper.setProducts(products)
+      }
       return
     }
+    // Soft delete: solo marca como eliminado
     const { error } = await supabase
       .from('productos')
-      .delete()
+      .update({ eliminado_at: new Date().toISOString() })
       .eq('id', id)
-    if (error) {
-      console.error('Error detallado de Supabase:', error)
-      throw new Error(`No se puede eliminar el producto: ${error.message}. Puede tener ventas o recargas asociadas.`)
-    }
+      .eq('empresa_id', empresaId)
+    if (error) throw error
   },
 
   async updateStock(id: string, cantidad: number) {

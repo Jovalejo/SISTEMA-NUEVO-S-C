@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { supabase } from '@/lib/supabase'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -16,20 +17,24 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
     
-    // Credenciales hardcodeadas (puedes cambiarlas)
-    const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@sancristobal.com'
-    const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123'
-    
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
+      
+      if (error) throw error
+      
       // Guardar sesión
       localStorage.setItem('isAuthenticated', 'true')
       localStorage.setItem('userEmail', email)
+      localStorage.setItem('userId', data.user.id)
       localStorage.setItem('loginTime', new Date().toISOString())
       
       // Redirigir a selección de empresa
       router.push('/seleccionar-empresa')
-    } else {
-      setError('Credenciales incorrectas')
+    } catch (err: any) {
+      setError(err.message || 'Error al iniciar sesión')
       setLoading(false)
     }
   }
@@ -44,7 +49,7 @@ export default function LoginPage() {
               <div className="absolute inset-0 bg-blue-500 rounded-2xl blur-2xl opacity-20" />
               <Image
                 src="/logo.png"
-                alt="Logo San Cristóbal"
+                alt="Logo"
                 width={100}
                 height={100}
                 className="relative rounded-2xl shadow-xl"
@@ -94,7 +99,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="••••••••"
+                placeholder="•••••••••"
               />
             </div>
             
@@ -110,7 +115,7 @@ export default function LoginPage() {
           {/* Footer */}
           <div className="mt-8 text-center text-sm text-gray-500">
             <p>
-              Sistema de Inventario San Cristóbal
+              Sistema de Inventario Multi-Empresa
             </p>
           </div>
         </div>

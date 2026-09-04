@@ -18,10 +18,16 @@ export default function Navbar() {
     }
   }, [])
   
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Cerrar sesión en Supabase
+    await supabase.auth.signOut()
+    
+    // Limpiar localStorage
     localStorage.removeItem('isAuthenticated')
     localStorage.removeItem('userEmail')
+    localStorage.removeItem('userId')
     localStorage.removeItem('selectedEmpresa')
+    
     router.push('/login')
   }
   
