@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -20,7 +21,9 @@ export default function Navbar() {
   
   const handleLogout = async () => {
     // Cerrar sesión en Supabase
-    await supabase.auth.signOut()
+    if (supabase) {
+      await supabase.auth.signOut()
+    }
     
     // Limpiar localStorage
     localStorage.removeItem('isAuthenticated')

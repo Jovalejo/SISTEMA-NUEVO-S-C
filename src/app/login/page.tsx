@@ -17,6 +17,12 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
     
+    if (!supabase) {
+      setError('Supabase no está configurado. Configura las variables de entorno.')
+      setLoading(false)
+      return
+    }
+    
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,

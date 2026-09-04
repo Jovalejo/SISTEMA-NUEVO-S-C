@@ -15,8 +15,7 @@ CREATE INDEX IF NOT EXISTS idx_productos_eliminado ON productos(eliminado_at) WH
 DROP POLICY IF EXISTS "Permitir acceso por empresa a productos" ON productos;
 
 CREATE POLICY "Permitir acceso por empresa a productos" ON productos
-    FOR SELECT USING (eliminado_at IS NULL)
-    WITH CHECK (true);
+    FOR SELECT USING (eliminado_at IS NULL);
 
 -- Crear tabla de usuarios del sistema
 CREATE TABLE IF NOT EXISTS usuarios_sistema (
