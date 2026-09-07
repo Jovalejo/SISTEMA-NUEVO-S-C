@@ -16,6 +16,7 @@ export default function RecargasPage() {
     cantidad: 1,
     proveedor: ''
   })
+  const [busquedaProducto, setBusquedaProducto] = useState('')
   
   // Filtros
   const [filtroProducto, setFiltroProducto] = useState('')
@@ -96,6 +97,11 @@ export default function RecargasPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
+      if (!formData.producto_id) {
+        alert('Por favor selecciona un producto de la búsqueda')
+        return
+      }
+      
       const recarga = {
         producto_id: formData.producto_id,
         cantidad: formData.cantidad,
@@ -107,6 +113,7 @@ export default function RecargasPage() {
       await loadData()
       setShowModal(false)
       setFormData({ producto_id: '', cantidad: 1, proveedor: '' })
+      setBusquedaProducto('')
     } catch (error) {
       console.error('Error al registrar recarga:', error)
       alert('Error al registrar recarga')
@@ -362,43 +369,37 @@ export default function RecargasPage() {
               </div>
               
               <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                {/* Filtro rápido por producto */}
+                {/* Búsqueda de producto */}
                 <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-3">Filtro rápido por producto</h4>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-3">Búsqueda de producto</h4>
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">Producto</label>
-                    <select
-                      value={formData.producto_id}
-                      onChange={(e) => setFormData({ ...formData, producto_id: e.target.value })}
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Buscar producto</label>
+                    <input
+                      type="text"
+                      value={busquedaProducto}
+                      onChange={(e) => setBusquedaProducto(e.target.value)}
                       className="input-premium text-sm"
-                    >
-                      <option value="">Todos</option>
-                      {productos.map((producto) => (
-                        <option key={producto.id} value={producto.id}>
-                          {producto.nombre}
-                        </option>
-                      ))}
-                    </select>
+                      placeholder="Escribe para buscar producto..."
+                    />
                   </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Producto *
-                  </label>
-                  <select
-                    required
-                    value={formData.producto_id}
-                    onChange={(e) => setFormData({ ...formData, producto_id: e.target.value })}
-                    className="input-premium"
-                  >
-                    <option value="">Seleccionar producto</option>
-                    {productos.map((producto) => (
-                      <option key={producto.id} value={producto.id}>
-                        {producto.nombre} - Stock actual: {producto.stock}
-                      </option>
-                    ))}
-                  </select>
+                  {busquedaProducto && (
+                    <div className="mt-2 max-h-40 overflow-y-auto border border-gray-200 rounded-lg bg-white">
+                      {productos
+                        .filter(p => p.nombre.toLowerCase().includes(busquedaProducto.toLowerCase()))
+                        .map((producto) => (
+                          <div
+                            key={producto.id}
+                            onClick={() => {
+                              setFormData({ ...formData, producto_id: producto.id })
+                              setBusquedaProducto(producto.nombre)
+                            }}
+                            className="p-2 hover:bg-gray-100 cursor-pointer text-sm border-b border-gray-100 last:border-b-0"
+                          >
+                            {producto.nombre} - Stock actual: {producto.stock}
+                          </div>
+                        ))}
+                    </div>
+                  )}
                 </div>
                 
                 <div>
@@ -432,6 +433,8 @@ export default function RecargasPage() {
                 {formData.producto_id && (
                   <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                     <div className="text-sm text-purple-800">
+                      <strong>Producto seleccionado:</strong> {productos.find(p => p.id === formData.producto_id)?.nombre}
+                      <br />
                       <strong>Nuevo stock:</strong> {
                         productos.find(p => p.id === formData.producto_id)?.stock 
                         ? productos.find(p => p.id === formData.producto_id)!.stock + formData.cantidad
@@ -450,7 +453,10 @@ export default function RecargasPage() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setShowModal(false)}
+                    onClick={() => {
+                      setShowModal(false)
+                      setBusquedaProducto('')
+                    }}
                     className="flex-1 btn-premium bg-gray-100 text-gray-700 hover:bg-gray-200"
                   >
                     Cancelar
