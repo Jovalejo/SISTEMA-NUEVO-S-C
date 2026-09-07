@@ -401,13 +401,13 @@ export default function VentasPage() {
                   {busquedaProducto && (
                     <div className="mt-2 max-h-40 overflow-y-auto border border-gray-200 rounded-lg bg-white">
                       {productos
-                        .filter(p => p.nombre.toLowerCase().includes(busquedaProducto.toLowerCase()))
+                        .filter(p => p.nombre?.toLowerCase().includes(busquedaProducto.toLowerCase()))
                         .map((producto) => (
                           <div
                             key={producto.id}
                             onClick={() => {
                               setFormData({ ...formData, producto_id: producto.id })
-                              setBusquedaProducto(producto.nombre)
+                              setBusquedaProducto(producto.nombre || '')
                             }}
                             className="p-2 hover:bg-gray-100 cursor-pointer text-sm border-b border-gray-100 last:border-b-0"
                           >
@@ -449,7 +449,7 @@ export default function VentasPage() {
                 {formData.producto_id && (
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                     <div className="text-sm text-green-800">
-                      <strong>Producto seleccionado:</strong> {productos.find(p => p.id === formData.producto_id)?.nombre}
+                      <strong>Producto seleccionado:</strong> {productos.find(p => p.id === formData.producto_id)?.nombre || 'N/A'}
                       <br />
                       <strong>Total estimado:</strong> $
                       {productos.find(p => p.id === formData.producto_id)?.precio 

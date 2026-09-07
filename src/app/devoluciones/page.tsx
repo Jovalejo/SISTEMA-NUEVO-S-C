@@ -387,13 +387,13 @@ export default function DevolucionesPage() {
                   {busquedaProducto && (
                     <div className="mt-2 max-h-40 overflow-y-auto border border-gray-200 rounded-lg bg-white">
                       {productos
-                        .filter(p => p.nombre.toLowerCase().includes(busquedaProducto.toLowerCase()))
+                        .filter(p => p.nombre?.toLowerCase().includes(busquedaProducto.toLowerCase()))
                         .map((producto) => (
                           <div
                             key={producto.id}
                             onClick={() => {
                               setFormData({ ...formData, producto_id: producto.id })
-                              setBusquedaProducto(producto.nombre)
+                              setBusquedaProducto(producto.nombre || '')
                             }}
                             className="p-2 hover:bg-gray-100 cursor-pointer text-sm border-b border-gray-100 last:border-b-0"
                           >
