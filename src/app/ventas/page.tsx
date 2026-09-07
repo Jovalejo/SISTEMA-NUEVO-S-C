@@ -98,13 +98,21 @@ export default function VentasPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
+      console.log('FormData actual:', formData)
+      console.log('Productos disponibles:', productos)
+      
       if (!formData.producto_id) {
         alert('Por favor selecciona un producto de la búsqueda')
         return
       }
       
       const producto = productos.find(p => p.id === formData.producto_id)
-      if (!producto) return
+      console.log('Producto encontrado:', producto)
+      
+      if (!producto) {
+        alert('Producto no encontrado')
+        return
+      }
       
       const venta = {
         producto_id: formData.producto_id,
@@ -114,6 +122,8 @@ export default function VentasPage() {
         fecha: new Date().toISOString(),
         vendedor: formData.vendedor
       }
+      
+      console.log('Venta a registrar:', venta)
       
       await ventasAPI.create(venta)
       await loadData()
@@ -406,10 +416,8 @@ export default function VentasPage() {
                           <div
                             key={producto.id}
                             onClick={() => {
-                              if (producto.id) {
-                                setFormData({ ...formData, producto_id: producto.id })
-                                setBusquedaProducto('')
-                              }
+                              setFormData({ ...formData, producto_id: producto.id })
+                              setBusquedaProducto(producto.nombre)
                             }}
                             className="p-2 hover:bg-gray-100 cursor-pointer text-sm border-b border-gray-100 last:border-b-0"
                           >
