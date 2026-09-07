@@ -364,35 +364,23 @@ export default function DevolucionesPage() {
               </div>
               
               <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                {/* Filtros rápidos para el modal */}
+                {/* Filtro rápido por producto */}
                 <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-3">Filtros rápidos</h4>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Producto</label>
-                      <select
-                        value={formData.producto_id}
-                        onChange={(e) => setFormData({ ...formData, producto_id: e.target.value })}
-                        className="input-premium text-sm"
-                      >
-                        <option value="">Todos</option>
-                        {productos.map((producto) => (
-                          <option key={producto.id} value={producto.id}>
-                            {producto.nombre}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Motivo</label>
-                      <input
-                        type="text"
-                        value={formData.motivo}
-                        onChange={(e) => setFormData({ ...formData, motivo: e.target.value })}
-                        className="input-premium text-sm"
-                        placeholder="Filtrar por motivo"
-                      />
-                    </div>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-3">Filtro rápido por producto</h4>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Producto</label>
+                    <select
+                      value={formData.producto_id}
+                      onChange={(e) => setFormData({ ...formData, producto_id: e.target.value })}
+                      className="input-premium text-sm"
+                    >
+                      <option value="">Todos</option>
+                      {productos.map((producto) => (
+                        <option key={producto.id} value={producto.id}>
+                          {producto.nombre}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
                 
