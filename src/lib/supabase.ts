@@ -10,7 +10,7 @@ export const isSupabaseConfigured = !!supabase
 
 // Tipos de datos
 export interface Producto {
-  id?: string
+  id: string
   nombre: string
   descripcion: string
   stock: number
@@ -28,7 +28,7 @@ export interface Venta {
   precio_unitario: number
   total: number
   fecha: string
-  cliente?: string
+  vendedor?: string
   empresa_id?: string
   created_at?: string
 }

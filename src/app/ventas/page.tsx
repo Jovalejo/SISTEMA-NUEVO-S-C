@@ -122,7 +122,7 @@ export default function VentasPage() {
       setBusquedaProducto('')
     } catch (error) {
       console.error('Error al registrar venta:', error)
-      alert('Error al registrar venta')
+      alert('Error al registrar venta: ' + (error as Error).message)
     }
   }
   
