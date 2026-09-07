@@ -391,7 +391,7 @@ export default function RecargasPage() {
                             key={producto.id}
                             onClick={() => {
                               setFormData({ ...formData, producto_id: producto.id })
-                              setBusquedaProducto(producto.nombre || '')
+                              setBusquedaProducto('')
                             }}
                             className="p-2 hover:bg-gray-100 cursor-pointer text-sm border-b border-gray-100 last:border-b-0"
                           >
