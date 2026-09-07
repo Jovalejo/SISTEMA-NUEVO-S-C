@@ -1,0 +1,103 @@
+{
+  "nombre_sistema": "Sistema de Inventario Multi-Empresa",
+  "version": "1.0",
+  "descripcion_corta": "Sistema completo de gestión de inventario para comerciantes y ruteros con ventas a crédito",
+  "objetivo_mercado": "Comerciantes minoristas, ruteros, negocios de ventas a crédito, negocios con múltiples sucursales",
+  "problemas_resuelve": [
+    "Control manual en Excel es lento y propenso a errores",
+    "Pérdida de dinero por falta de control de stock",
+    "Dificultad para rastrear ventas a crédito",
+    "No poder separar inventario por empresa",
+    "No tener reportes automáticos"
+  ],
+  "caracteristicas_principales": [
+    "Sistema multi-empresa (San Cristóbal, El Vigía, etc.)",
+    "Datos completamente separados por empresa",
+    "Login con autenticación separada por empresa",
+    "Gestión completa de productos (CRUD)",
+    "Sistema de ventas con actualización automática de stock",
+    "Sistema de devoluciones con reingreso al stock",
+    "Sistema de recargas de stock",
+    "Filtrado avanzado por fechas, productos, clientes, proveedores",
+    "Exportación a PDF y Excel de datos filtrados",
+    "Soft delete (no borra datos físicamente, preserva historial)",
+    "Reportes automáticos con cálculos de totales",
+    "Diseño profesional responsive (PC, tablet, móvil)",
+    "Autenticación con Supabase",
+    "Modo demo/local para pruebas"
+  ],
+  "tecnologias": {
+    "frontend": {
+      "framework": "Next.js 16.3.4",
+      "lenguaje": "TypeScript",
+      "estilos": "Tailwind CSS v4",
+      "react": "Hooks y componentes modernos"
+    },
+    "backend": {
+      "base_datos": "Supabase (PostgreSQL)",
+      "autenticacion": "Supabase Auth",
+      "almacenamiento": "Supabase (500 MB gratis)"
+    },
+    "despliegue": {
+      "hosting": "Vercel (gratuito)",
+      "control_versiones": "GitHub",
+      "domino_personal": "Configurable en Vercel"
+    },
+    "librerias": [
+      "@supabase/supabase-js",
+      "jspdf",
+      "jspdf-autotable",
+      "xlsx"
+    ]
+  },
+  "costos_operativos": {
+    "vercel": "$0 (plan gratuito)",
+    "supabase": "$0 (plan gratuito)",
+    "domino_personal": "~$10-15 USD/año (opcional)",
+    "total_anual": "$0-$15 USD/año"
+  },
+  "capacidad_supabase": {
+    "base_datos": "500 MB",
+    "almacenamiento": "1 GB",
+    "conexiones": "50,000/mes",
+    "transferencia": "2 GB/mes",
+    "permite": "Miles de productos, millones de registros, múltiples empresas"
+  },
+  "tiempo_configuracion_cliente_nuevo": "~15 minutos",
+  "requisitos_cliente": [
+    "Navegador web moderno",
+    "Conexión a internet",
+    "No requiere instalación de software",
+    "Funciona en PC, tablet y celular"
+  ],
+  "ventajas_vs_excel": [
+    "Multi-usuario",
+    "Actualización en tiempo real",
+    "Reportes automáticos",
+    "Control de accesos",
+    "Backup en la nube"
+  ],
+  "ventajas_vs_sistemas_pago": [
+    "Más económico (costo operativo casi cero)",
+    "Personalizable según necesidad",
+    "Sin suscripciones mensuales",
+    "Código abierto (modificable)",
+    "Soporte directo"
+  ],
+  "sugerencias_cobro": [
+    "Venta única por proyecto",
+    "Suscripción mensual",
+    "Por implementación/configuración",
+    "Por usuario/mes"
+  ],
+  "valor_agregado": [
+    "Ahorro de tiempo (elimina manualidad de Excel)",
+    "Control financiero (historial completo de ventas a crédito)",
+    "Profesionalismo (mejor imagen del negocio)",
+    "Facilidad de uso (no requiere capacitación extensa)"
+  ],
+  "script_venta": "Este sistema de inventario multi-empresa está diseñado específicamente para comerciantes y ruteros como tú. Reemplaza el manejo manual en Excel con un sistema automatizado que separa tu inventario por empresa, controla tus ventas a crédito con historial completo, genera reportes en PDF y Excel en segundos, funciona en cualquier dispositivo, tiene costo operativo casi cero y es 100% personalizable con tu marca. El sistema ya está completo, probado y funcionando. Solo necesitas tus credenciales de acceso y estará listo para usar en minutos.",
+  "estado": "Completado y funcionando",
+  "url_demo": "Disponible en Vercel",
+  "url_codigo": "https://github.com/Jovalejo/SISTEMA-NUEVO-S-C"
+}

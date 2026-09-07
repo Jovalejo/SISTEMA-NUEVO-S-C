@@ -14,12 +14,12 @@ export default function VentasPage() {
   const [formData, setFormData] = useState({
     producto_id: '',
     cantidad: 1,
-    cliente: ''
+    vendedor: ''
   })
   
   // Filtros
   const [filtroProducto, setFiltroProducto] = useState('')
-  const [filtroCliente, setFiltroCliente] = useState('')
+  const [filtroVendedor, setFiltroVendedor] = useState('')
   const [filtroFechaInicio, setFiltroFechaInicio] = useState('')
   const [filtroFechaFin, setFiltroFechaFin] = useState('')
   const [busqueda, setBusqueda] = useState('')
@@ -30,7 +30,7 @@ export default function VentasPage() {
   
   useEffect(() => {
     aplicarFiltros()
-  }, [ventas, filtroProducto, filtroCliente, filtroFechaInicio, filtroFechaFin, busqueda])
+  }, [ventas, filtroProducto, filtroVendedor, filtroFechaInicio, filtroFechaFin, busqueda])
   
   const loadData = async () => {
     try {
@@ -57,10 +57,10 @@ export default function VentasPage() {
       filtradas = filtradas.filter(v => v.producto_id === filtroProducto)
     }
     
-    // Filtro por cliente
-    if (filtroCliente) {
+    // Filtro por vendedor
+    if (filtroVendedor) {
       filtradas = filtradas.filter(v => 
-        v.cliente && v.cliente.toLowerCase().includes(filtroCliente.toLowerCase())
+        v.vendedor && v.vendedor.toLowerCase().includes(filtroVendedor.toLowerCase())
       )
     }
     
@@ -78,7 +78,7 @@ export default function VentasPage() {
       const busquedaLower = busqueda.toLowerCase()
       filtradas = filtradas.filter(v =>
         (v.productos?.nombre || '').toLowerCase().includes(busquedaLower) ||
-        (v.cliente || '').toLowerCase().includes(busquedaLower) ||
+        (v.vendedor || '').toLowerCase().includes(busquedaLower) ||
         v.total?.toString().includes(busquedaLower)
       )
     }
@@ -88,7 +88,7 @@ export default function VentasPage() {
   
   const limpiarFiltros = () => {
     setFiltroProducto('')
-    setFiltroCliente('')
+    setFiltroVendedor('')
     setFiltroFechaInicio('')
     setFiltroFechaFin('')
     setBusqueda('')
@@ -106,13 +106,13 @@ export default function VentasPage() {
         precio_unitario: producto.precio,
         total: producto.precio * formData.cantidad,
         fecha: new Date().toISOString(),
-        cliente: formData.cliente
+        vendedor: formData.vendedor
       }
       
       await ventasAPI.create(venta)
       await loadData()
       setShowModal(false)
-      setFormData({ producto_id: '', cantidad: 1, cliente: '' })
+      setFormData({ producto_id: '', cantidad: 1, vendedor: '' })
     } catch (error) {
       console.error('Error al registrar venta:', error)
       alert('Error al registrar venta')
@@ -126,7 +126,7 @@ export default function VentasPage() {
       cantidad: v.cantidad,
       precio_unitario: v.precio_unitario,
       total: v.total,
-      cliente: v.cliente || 'N/A'
+      vendedor: v.vendedor || 'N/A'
     }))
     
     exportToPDF(datosExportar, 'ventas_filtradas', 'Reporte de Ventas Filtradas')
@@ -139,7 +139,7 @@ export default function VentasPage() {
       cantidad: v.cantidad,
       precio_unitario: v.precio_unitario,
       total: v.total,
-      cliente: v.cliente || 'N/A'
+      vendedor: v.vendedor || 'N/A'
     }))
     
     exportToExcel(datosExportar, 'ventas_filtradas')
@@ -244,13 +244,13 @@ export default function VentasPage() {
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Cliente</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Vendedor</label>
               <input
                 type="text"
-                value={filtroCliente}
-                onChange={(e) => setFiltroCliente(e.target.value)}
+                value={filtroVendedor}
+                onChange={(e) => setFiltroVendedor(e.target.value)}
                 className="input-premium"
-                placeholder="Nombre del cliente"
+                placeholder="Nombre del vendedor"
               />
             </div>
             
@@ -311,7 +311,7 @@ export default function VentasPage() {
                   <th>Cantidad</th>
                   <th>Precio Unitario</th>
                   <th>Total</th>
-                  <th>Cliente</th>
+                  <th>Vendedor</th>
                 </tr>
               </thead>
               <tbody>
@@ -359,7 +359,7 @@ export default function VentasPage() {
                       <td className="text-gray-900">{venta.cantidad}</td>
                       <td className="text-gray-900">${venta.precio_unitario.toFixed(2)}</td>
                       <td className="font-bold text-green-600">${venta.total.toFixed(2)}</td>
-                      <td className="text-gray-900">{venta.cliente || 'N/A'}</td>
+                      <td className="text-gray-900">{venta.vendedor || 'N/A'}</td>
                     </tr>
                   ))
                 )}
@@ -378,6 +378,38 @@ export default function VentasPage() {
               </div>
               
               <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                {/* Filtros rápidos para el modal */}
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-3">Filtros rápidos</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Producto</label>
+                      <select
+                        value={formData.producto_id}
+                        onChange={(e) => setFormData({ ...formData, producto_id: e.target.value })}
+                        className="input-premium text-sm"
+                      >
+                        <option value="">Todos</option>
+                        {productos.map((producto) => (
+                          <option key={producto.id} value={producto.id}>
+                            {producto.nombre}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Vendedor</label>
+                      <input
+                        type="text"
+                        value={formData.vendedor}
+                        onChange={(e) => setFormData({ ...formData, vendedor: e.target.value })}
+                        className="input-premium text-sm"
+                        placeholder="Filtrar por vendedor"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Producto *
@@ -414,14 +446,14 @@ export default function VentasPage() {
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Cliente (opcional)
+                    Vendedor (opcional)
                   </label>
                   <input
                     type="text"
-                    value={formData.cliente}
-                    onChange={(e) => setFormData({ ...formData, cliente: e.target.value })}
+                    value={formData.vendedor}
+                    onChange={(e) => setFormData({ ...formData, vendedor: e.target.value })}
                     className="input-premium"
-                    placeholder="Nombre del cliente"
+                    placeholder="Nombre del vendedor"
                   />
                 </div>
                 
